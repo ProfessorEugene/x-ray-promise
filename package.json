@@ -1,7 +1,7 @@
 {
   "name": "x-ray-promise",
   "description": "x-ray wrapper that patches basic promise support into x-ray instances",
-  "version": "1.0.1-SNAPSHOT",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "./factory.js",
   "author": {
