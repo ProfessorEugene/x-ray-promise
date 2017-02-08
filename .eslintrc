@@ -1,0 +1,20 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "env": {
+    "mocha": true,
+    "browser": false
+  },
+  "rules": {
+    "indent": [
+      2,
+      4
+    ],
+    "max-len": [
+      0
+    ],
+    "no-param-reassign": [
+      0
+    ]
+  }
+}
