@@ -55,6 +55,16 @@ describe('XrayPromise tests', () => {
                 expect(result).to.equal('upper');
             });
     });
+    it('supports dynamic filter replacements without extra options', () => {
+        const x = new Xray();
+        Object.assign(x.options.filters, {
+            downer: str => str.toLowerCase(),
+        });
+        return x('<html><title>UPPER</title></html>', 'title | downer').toPromise()
+            .then((result) => {
+                expect(result).to.equal('upper');
+            });
+    });
     it('supports toHandler in returned promises', () => {
         const x = new Xray();
         return x('<html><title>fancy</title></html>', {
@@ -65,12 +75,17 @@ describe('XrayPromise tests', () => {
             });
         });
     });
-    it('passes arguments', () => {
+    it('passes arguments to x', () => {
         const x = new Xray().driver((ctx, callback) => {
             callback(null, '<span>not google</span>');
         });
         return x('http://google.com/', 'span').toPromise().then((result) => {
             expect(result).to.equal('not google');
         });
+    });
+    it('runs delegate functions correctly', () => {
+        const x = new Xray();
+        x.driver('not a driver');
+        expect(x.driver()).to.equal('not a driver');
     });
 });

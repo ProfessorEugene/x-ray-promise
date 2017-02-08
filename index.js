@@ -14,12 +14,15 @@ const Xray = require('x-ray');
 
 /**
  * Construct an Xray instance that adds a new toPromise method
- * @param args xray construction arguments
+ * @param options xray options
  * @returns {XrayWrapper} a wrapped xray instance
  * @constructor
  */
-function XrayPromiseWrapper(...args) {
-    let delegate = new Xray(...args);
+function XrayPromiseWrapper(options) {
+    const xOptions = Object.assign({
+        filters: {},
+    }, options);
+    const delegate = new Xray(xOptions);
     const addToHandlerFn = (promise) => {
         /* add a toHandler method to promise */
         Object.assign(promise, {
@@ -54,7 +57,7 @@ function XrayPromiseWrapper(...args) {
         };
         return xNode;
     };
-    wrapper.options = args[0];
+    wrapper.options = xOptions;
     wrapper.delegate = delegate;
     /* lets update some functions! */
     Object.keys(delegate).map(key => ({
@@ -62,8 +65,13 @@ function XrayPromiseWrapper(...args) {
     })).filter(kv => typeof (kv.value) === 'function')
         .forEach((kv) => {
             wrapper[kv.key] = (...fnArgs) => {
-                delegate = kv.value.apply(delegate, fnArgs);
-                return wrapper;
+                const result = kv.value.apply(delegate, fnArgs);
+                /* if function returns "this" return wrapper */
+                if (result === delegate) {
+                    return wrapper;
+                }
+                /* if function does not return this, return real result */
+                return result;
             };
         });
 
