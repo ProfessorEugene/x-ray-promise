@@ -4,25 +4,25 @@ An [x-ray](https://github.com/lapwinglabs/x-ray) wrapper that patches basic prom
 
 Basic usage:
 ```js
+/* standard Xray usage for construction and config: */
 var XrayPromise = require('x-ray-promise');
-...
-// standard Xray usage for construction and config:
 var x = XrayPromise({
     filters: {...}
     });
 x.concurrency(7).limit(5,100);
-...
-// basic promise usage
+
+/* basic promise usage: */
 x('https://www.google.com/','title).toPromise().then(...).catch(...);
-// fancier promise usage
+
+/* fancier promise usage: */
 x('https://www.google.com/',{
     anotherSite: x('a@href',{
         title: (ctx, cb) => x(ctx,'title').toPromise().toHandler(cb),
         anotherTitle: x(ctx,'title')
     })
 }).toPromise().then(...).catch(...);
-...
-//dynamic filtering
+
+/* dynamicly add filters: */
 Object.assign(x.options.filters,{
     anotherFilter: (v) => v.toLowerCase()
 });
