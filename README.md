@@ -12,7 +12,7 @@ var x = XrayPromise({
 x.concurrency(7).limit(5,100);
 
 /* basic promise usage: */
-x('https://www.google.com/','title).toPromise().then(...).catch(...);
+x('https://www.google.com/','title').toPromise().then(...).catch(...);
 
 /* fancier promise usage: */
 x('https://www.google.com/',{
